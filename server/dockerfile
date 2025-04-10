@@ -1,0 +1,15 @@
+# Declan Dornstauder
+# DVU072 / 11284744
+# CMPT 436
+# Project
+
+FROM elixir:latest
+WORKDIR /app
+RUN mix local.hex --force && \
+    mix local.rebar --force
+RUN mix archive.install hex phx_new --force
+COPY . .
+RUN mix deps.get
+RUN mix phx.gen.json Items Item items value:boolean
+RUN mix compile
+CMD ["mix", "phx.server"]

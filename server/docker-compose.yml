@@ -1,0 +1,46 @@
+# Declan Dornstauder
+# DVU072 / 11284744
+# CMPT 436
+# Project
+
+version: '3.9'
+services:
+  server:
+    container_name: server
+    build: .
+    ports:
+      - "5000:4000"
+    depends_on:
+      - database
+    environment:
+      PGDATABASE: database
+      PGUSER: username
+      PGPASSWORD: password
+      PGHOST: database
+    command:
+
+  database:
+    image: postgres:latest
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    depends_on:
+      - server
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+volumes:
+  prometheus:
+
