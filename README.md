@@ -35,13 +35,10 @@ To explore the objective of this project, the following technologies are used:
 
 Both a Phoenix REST API and PostgreSQL database are deployed as containers within a Docker
 cluster. The Postgres database is connected to the API, allowing client requests to modify its
-data via the following endpoint:
-
-_localhost:5000/api/items_
+data via the local endpoint, _localhost:5000/api/items_
 
 The API is initialized using a command ([_appendix A_](#a-phoenix-project-generation-command)) flagged to generate a Phoenix project
 without the additional functionalities required in the development of a Phoenix web
-
 
 application. In the case of a REST API, particularly in the context of this analysis, it is important
 to ensure the API’s foundation is as lightweight as possible.
@@ -64,10 +61,10 @@ requests iterates a variable number of times for each process.
 The volume of requests sent to the API during a single execution of the script can be
 determined by _T = NM5_, where:
 
-    _T_ = the total number of requests
-    _N_ = the number of concurrent processes
-    _5_ = the constant number of requests within a single request sequence.
-    _M_ = the number of request sequences executed.
+- _T_ = the total number of requests
+- _N_ = the number of concurrent processes
+- 5 = the constant number of requests within a single request sequence.
+- _M_ = the number of request sequences executed.
 
 To assess the performance of the API and database under varying loads of client requests, the
 script can be executed using a range of values _N_ and _M_.
@@ -81,11 +78,11 @@ insights into its performance, scalability, and responsiveness during concurrent
 Following an examination of the base metrics exposed by the API through ProQL queries
 ([_appendix E_](#e-proql-queries)) , the following metrics have been identified and are considered for further analysis:
 
-    Number of requests received
-    Average number of requests received / 2s
-    Average response time (ms) of requests received / 2s
-    Number of additional server processes created
-    Number of ready-queued server processes
+- Number of requests received
+- Average number of requests received / 2s
+- Average response time (ms) of requests received / 2s
+- Number of additional server processes created
+- Number of ready-queued server processes
 
 Each metric tracks data throughout the duration of the client script's execution time,
 contributing as another key metric under consideration for the analysis.
@@ -117,10 +114,10 @@ involve executing the client script once for each scenario, denoted by identifie
 following table:
 
 
-| Test case ID | Number of concurrent processes (_N_) | Number of request iterations (_M_) Calculated number of requests sent (_T_) |
-| ------------ | ------------------------------------ | --------------------------------------------------------------------------- |
+| Test case ID | Number of concurrent processes (_N_) | Number of request iterations (_M_) | Calculated number of requests sent (_T_) |
+| ------------ | ------------------------------------ | ---------------------------------- | ---------------------------------------- |
 | A | 10 | 20 | 1,000 |
-| B | 100 20 10,000 |
+| B | 100 | 20 | 10,000 |
 | C | 1,000 | 20 | 100,000 |
 | D | 20 | 100 | 10,000 |
 | E | 20 | 1,000 | 100,000 |
@@ -130,7 +127,7 @@ database contents are entirely cleared between each test case.
 
 ### IV. Data Collection
 
-Please refer to original report _doc/report.pdf_ for individual test case data and graph images
+Please refer to the original report, _doc/report.pdf_, for individual test case data and graph images
 
 ### V. Analysis
 
@@ -202,12 +199,12 @@ optimizing API performance under varying levels of concurrency.
 
 ## VI. Appendices
 
-##### A. Phoenix project generation command
+#### A. Phoenix project generation command
 ```
 mix phx.new project --no- install --no -assets --no -html --no -dashboard --no- live --no-mailer
 ```
 
-##### B. Phoenix project manual configuration
+#### B. Phoenix project manual configuration
 
 _dev.ex:_
 1. Change the root end-point port from 127.0.0.1 (local host) to 0.0.0.0 for Docker
@@ -224,7 +221,7 @@ scope "/api", ProjectWeb do
 end
 ```
 
-##### C. API generated handler functions
+#### C. API generated handler functions
 
 _Get items:_
 ```elixir
@@ -298,7 +295,7 @@ def delete(conn, %{"id" => id}) do
 end
 ```
 
-##### D. Elixir client script
+#### D. Elixir client script
 
 _client.ex:_
 
@@ -374,7 +371,7 @@ end
 Client.main (System.argv ())
 ```
 
-##### E. ProQL queries
+#### E. ProQL queries
 
 _Number of requests received_
 ```
@@ -402,7 +399,7 @@ _Number of ready-queued server processes_
 erlang_vm_run_queue_total
 ```
 
-##### F. Prometheus configuration
+#### F. Prometheus configuration
 
 Note: The running Prometheus container is mapped by default to port 9090 of the local host
 
@@ -417,7 +414,7 @@ scrape_configs:
         - targets: ['server:4050']
 ```
 
-##### G. Docker configuration
+#### G. Docker configuration
 
 _dockerfile:_
 ```yml
